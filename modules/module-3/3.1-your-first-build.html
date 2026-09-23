@@ -3,44 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3.1 — Base44 Walkthrough: Your First Build</title>
+  <title>3.1 Base44 Walkthrough: Your First Build | Free AI Business Course</title>
+  <meta name="description" content="Blank screen to a real, working app. By the end of this lesson you'll have published something live in Base44 — not a demo, an actual URL you can send someone." />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#141518" media="(prefers-color-scheme: dark)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Free AI Business Course" />
+  <meta property="og:title" content="3.1 Base44 Walkthrough: Your First Build | Free AI Business Course" />
+  <meta property="og:description" content="Blank screen to a real, working app. By the end of this lesson you'll have published something live in Base44 — not a demo, an actual URL you can send someone." />
+  <meta property="og:url" content="https://zamanjha.github.io/free-ai-business-course/modules/module-3/3.1-your-first-build.html" />
+  <meta property="og:image" content="https://zamanjha.github.io/free-ai-business-course/assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Free AI Business Course: you'll have something online in twenty minutes." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23fff'/%3E%3Cpath d='M6.5 17.6c2.6 2 5 4.6 7.2 7.8C18 17 22.9 10.4 26.5 5.5' fill='none' stroke='%232140b5' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="../../assets/css/style.css" />
+  <script>document.documentElement.className = "js";</script>
+  <script src="../../assets/js/course.js" defer></script>
 </head>
-<body>
+<body class="lesson-page" data-lesson="3.1">
 
-  <div class="accent-bar m3"></div>
+  <a class="skip-link" href="#lesson">Skip to the lesson</a>
 
   <header class="topbar">
-    <div class="wrap">
-      <div class="brand"><span class="dot">&gt;</span> free-ai-business-course</div>
-      <nav>
-        <a href="../../index.html">All lessons</a>
-      </nav>
+    <div class="topbar-inner">
+      <a class="brand" href="../../index.html">Free AI Business Course</a>
+      <a class="topbar-link" href="../../index.html#module-3">Course map</a>
     </div>
   </header>
 
-  <main class="wrap">
-    <div class="lesson-header">
-      <div class="breadcrumb"><a href="../../index.html">Course</a> / Module 3: Setting Up Operations / Lesson 3.1</div>
-      <h1>Base44 Walkthrough: Your First Build</h1>
-      <p class="lesson-desc">Blank screen to a real, working app. By the end of this lesson you'll have published something live in Base44 — not a demo, an actual URL you can send someone.</p>
-    </div>
+  <div class="lesson-layout">
+    <nav class="rail" aria-label="Lessons in this course" data-rail></nav>
 
-    <div class="env-check">
-      <span class="env-label">Before you start this lesson</span>
-      <ul>
-        <li>15–20 minutes uninterrupted — this is a build-along, not a watch-later video</li>
-        <li>Nothing else. No code editor, no hosting account, no separate deployment setup.</li>
-      </ul>
-    </div>
+    <main id="lesson" class="lesson">
+      <header class="lesson-header">
+        <p class="crumb">
+          <a href="../../index.html#module-3">Module 3: Setting Up Operations</a>
+          <span>Lesson 1 of 4</span>
+        </p>
+        <h1><span class="lesson-num">3.1</span> Base44 Walkthrough: Your First Build</h1>
+        <p class="lesson-desc">Blank screen to a real, working app. By the end of this lesson you'll have published something live in Base44 — not a demo, an actual URL you can send someone.</p>
+      </header>
 
-    <div class="video-embed">
+      <section class="before" aria-labelledby="before-title">
+        <h2 class="before-title" id="before-title">Before you start this lesson</h2>
+        <ul>
+          <li>15–20 minutes uninterrupted — this is a build-along, not a watch-later video</li>
+          <li>Nothing else. No code editor, no hosting account, no separate deployment setup.</li>
+        </ul>
+      </section>
+
+      <div class="video-embed">
       <!-- Swap src for the real hosted walkthrough video -->
       <iframe src="about:blank" title="Lesson video: Base44 Walkthrough" allowfullscreen></iframe>
     </div>
 
-    <div class="lesson-body">
-      <p>This is the most important lesson in the course to actually do, not just watch. Everything downstream — the scraper in 2.2, your business backend in 3.3, the client deliverable in Module 7 — is the same underlying skill repeated. Get comfortable with it once here, with nothing on the line, and it stops being a bottleneck later.</p>
+      <div class="lesson-body">
+
+      <p>This is the most important lesson in the course to actually do, not just watch. Everything downstream — the scraper in <a href="../module-2/2.2-build-your-lead-scraper.html">2.2</a>, your business backend in <a href="3.3-your-business-backend.html">3.3</a>, the client deliverable in Module 7 — is the same underlying skill repeated. Get comfortable with it once here, with nothing on the line, and it stops being a bottleneck later.</p>
 
       <h2>What you'll build</h2>
       <p>A simple internal tracker: a list of contacts (name, business, status, notes) with the ability to add, edit, and mark a status. It's intentionally small. The goal isn't the app — it's the muscle memory of going from a plain-English description to a published, working product inside Base44.</p>
@@ -85,17 +106,26 @@ This is an internal tool I'll use daily, so prioritize speed of data entry over 
       </div>
 
       <h3>Why this specific exercise</h3>
-      <p>This tracker isn't throwaway — you'll actually use it in Module 5 to track outreach once you start contacting real businesses. Module 3.3 builds this out further into a full business backend. Nothing you build in this course is a disposable practice exercise; everything either becomes a tool you keep using or a pattern you repeat for a client.</p>
-    </div>
+      <p>This tracker isn't throwaway — you'll actually use it in Module 5 to track outreach once you start contacting real businesses. Module <a href="3.3-your-business-backend.html">3.3</a> builds this out further into a full business backend. Nothing you build in this course is a disposable practice exercise; everything either becomes a tool you keep using or a pattern you repeat for a client.</p>
+      </div>
 
-    <div class="lesson-nav">
-      <a href="../module-2/2.4-locking-in-your-niche.html">&larr; Back: 2.4</a>
-      <a class="next" href="3.2-structuring-for-client-work.html">Next: 3.2 &rarr;</a>
-    </div>
-  </main>
+      <nav class="lesson-nav" aria-label="Previous and next lesson">
+      <a class="prev" href="../module-2/2.4-locking-in-your-niche.html">
+        <span class="nav-dir">Previous, in Module 2</span>
+        <span class="nav-title">2.4 Locking In Your Niche</span>
+      </a>
+      <a class="next" href="3.2-structuring-for-client-work.html">
+        <span class="nav-dir">Next</span>
+        <span class="nav-title">3.2 Structuring a Base44 Project for Client Work</span>
+      </a>
+      </nav>
+    </main>
+  </div>
 
-  <footer class="site-footer wrap">
-    Free AI Business Course
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>Free AI Business Course. 8 modules, 36 lessons.</p>
+    </div>
   </footer>
 
 </body>
