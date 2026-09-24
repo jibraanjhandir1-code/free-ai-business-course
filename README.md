@@ -12,7 +12,8 @@ modules/
   ...
   module-7/7.4-what-happens-after-client-1.html
 assets/
-  css/style.css                Every style on the site (tokens at the top)
+  css/archivo.css              The font's @font-face rules, with the latin subset inlined (generated)
+  css/style.css                Every other style on the site (tokens at the top)
   js/course.js                 Course outline, progress, notes, fill-ins, rail
   fonts/                       Archivo (variable woff2) and its licence, OFL.txt
   og-image.png                 1200×630 link-preview image
@@ -58,7 +59,8 @@ Every lesson has a video slot that stays hidden while its iframe `src` is `about
 
 ## Design
 
-- **Type:** Archivo, self-hosted from `assets/fonts/` under the SIL Open Font License. It's used across its width axis: expanded and heavy for titles and numbers, normal width for reading.
+- **Type:** Archivo, self-hosted under the SIL Open Font License. It's used across its width axis: expanded and heavy for titles and numbers, normal width for reading. The latin subset is inlined in `assets/css/archivo.css`, so every page's first frame is already in Archivo instead of a fallback font that then swaps; that file is generated from `assets/fonts/archivo-latin.woff2`, so don't edit it by hand.
+- **Moving between lessons:** pages fade into each other (a cross-document view transition, off for people who ask for reduced motion), and `course.js` is render-blocking, so the lesson rail and the other extras are there in the first frame rather than popping in.
 - **Colour:** white paper, black type, and two inks. Ballpoint blue (`--ink`) for links, buttons and finished lessons; a pale blue wash (`--marker`) for blanks still to fill in and "you are here". Dark mode follows the reader's system setting.
 - All tokens are CSS custom properties at the top of `assets/css/style.css`.
 

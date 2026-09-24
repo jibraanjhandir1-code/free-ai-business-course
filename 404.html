@@ -16,10 +16,12 @@
       var tag = document.createElement("base");
       tag.href = base;
       document.head.appendChild(tag);
-      var css = document.createElement("link");
-      css.rel = "stylesheet";
-      css.href = base + "assets/css/style.css";
-      document.head.appendChild(css);
+      ["archivo.css", "style.css"].forEach(function (file) {
+        var css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = base + "assets/css/" + file;
+        document.head.appendChild(css);
+      });
     })();
   </script>
 </head>
