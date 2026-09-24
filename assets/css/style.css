@@ -16,9 +16,26 @@
   navigation: auto;
 }
 
-::view-transition-old(root),
+/* Old page out, then new page in, barely overlapping, so the two lessons are
+   never seen on top of each other at half strength. */
+@keyframes page-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 90ms ease-out both page-out;
+}
+
 ::view-transition-new(root) {
-  animation-duration: 160ms;
+  animation: 130ms ease-in 70ms both page-in;
 }
 
 @media (prefers-reduced-motion: reduce) {
