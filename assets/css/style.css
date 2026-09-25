@@ -197,11 +197,13 @@ code {
   z-index: 10;
 }
 
+/* The bar's links are full-size touch targets (2.75rem tall), so the bar's own padding is small and
+   it stays --topbar-h tall. */
 .topbar-inner {
   max-width: var(--page);
   min-height: var(--topbar-h);
   margin: 0 auto;
-  padding: 0.6rem var(--gutter);
+  padding: 0.25rem var(--gutter);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -209,6 +211,9 @@ code {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   color: var(--strong);
   font-size: 1rem;
   font-stretch: 125%;
@@ -224,6 +229,10 @@ code {
 }
 
 .topbar-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  min-height: 2.75rem;
   font-size: 0.9375rem;
   font-weight: 600;
   white-space: nowrap;
@@ -802,7 +811,10 @@ code {
   font-size: 0.9375rem;
 }
 
+/* A full-size touch target without moving anything: the padding is taken back by the margin. */
 .crumb a {
+  padding-block: 0.625rem;
+  margin-block: -0.625rem;
   font-weight: 600;
 }
 
@@ -1048,6 +1060,7 @@ code {
 
 .copy-button {
   min-width: 5.5rem;
+  min-height: 2.75rem;
   padding: 0.45rem 0.9rem;
   border: 1px solid var(--ink);
   border-radius: 6px;
@@ -1373,6 +1386,11 @@ mark.fill.is-filled {
 
 .module-outline .rail-lessons {
   margin: 0 0 1rem;
+}
+
+/* On a phone the outline is tapped: a little more height makes each lesson a full-size touch target. */
+.module-outline .rail-lessons a {
+  padding-block: 0.55rem;
 }
 
 .module-outline .rail-lessons li:last-child {
