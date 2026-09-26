@@ -1454,6 +1454,95 @@ mark.fill.is-filled {
   text-underline-offset: 0.18em;
 }
 
+/* ---- Lessons open in order --------------------------------------------------
+   course.js marks what isn't open yet: a locked lesson shows its title and a way to where the learner
+   is up to; its content, video, notes and Next link wait until the lessons before it are done. */
+
+.lock {
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lesson-list li.is-locked a,
+.rail-lessons a.is-locked,
+.rail-others a.is-locked {
+  color: var(--muted);
+  cursor: default;
+}
+
+.lesson-list li.is-locked a:hover .lesson-title {
+  color: inherit;
+  text-decoration: none;
+}
+
+.lesson-list li.is-locked .lesson-state,
+.rail-lessons a.is-locked .rail-state,
+.rail-others a.is-locked .rail-state {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.lesson-page.is-locked .before,
+.lesson-page.is-locked .video-embed,
+.lesson-page.is-locked .lesson-body,
+.lesson-page.is-locked .lesson-nav {
+  display: none;
+}
+
+.lesson-locked {
+  max-width: var(--measure);
+  margin: 2rem 0 0;
+  padding: 1.25rem 1.25rem 0.25rem;
+  border-left: 3px solid var(--ink);
+  background: var(--marker);
+  color: var(--on-marker);
+}
+
+.locked-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  color: var(--on-marker);
+  font-size: 1.25rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.lesson-locked p {
+  margin: 0 0 1rem;
+}
+
+.lesson-locked .button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.lesson-nav a.next.is-locked {
+  cursor: default;
+}
+
+.lesson-nav a.next.is-locked .nav-title {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.nav-locked {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
 /* ==========================================================================
    Small screens
    ========================================================================== */

@@ -8,6 +8,7 @@
      exactly what's on screen
    - ticks, "continue", the route and your notes on the course map
    - the module rail (wide screens) and module outline (small screens)
+   - lessons that open in order: each one once the one before it is ticked
    Everything is saved in this browser only (localStorage).
    ========================================================================== */
 (function () {
@@ -208,17 +209,41 @@
     return readStore(FILLS_KEY, {}, isPlainObject);
   }
 
-  /** Where to pick up: the lesson after the furthest one ticked, else the first unticked (null when all are done). */
+  /** Where to pick up: the first lesson not ticked (null when all are done). Lessons open in order,
+      so this is the one unfinished lesson that's open. */
   function nextUp(done) {
-    var furthest = -1;
-    lessons.forEach(function (l, i) {
-      if (done.has(l.id)) furthest = i;
-    });
-    if (furthest + 1 < lessons.length) return lessons[furthest + 1];
     for (var i = 0; i < lessons.length; i++) {
       if (!done.has(lessons[i].id)) return lessons[i];
     }
     return null;
+  }
+
+  /* Lessons open in order: a lesson opens once every lesson before it is ticked, so Day 1 is always
+     open and ticking a lesson opens the next. Unticking an earlier lesson closes the later ones again.
+     A lesson that isn't open shows its title, but not its content, and isn't a link anywhere. This
+     runs in the browser, so it guides rather than guards: with JavaScript off, every page shows
+     everything, as it always has. */
+
+  /** True when a lesson is open. When this browser can't save ticks, every lesson is (ticking
+      couldn't open the next one). */
+  function isOpen(lesson, done) {
+    if (!storageOk) return true;
+    var up = nextUp(done);
+    return !up || lessons.indexOf(lesson) <= lessons.indexOf(up);
+  }
+
+  /** Make a link followable, or not: a locked lesson's link keeps its place and words, not its address. */
+  function setLinkOpen(link, open) {
+    if (open) {
+      if (link.hasAttribute("data-locked-href")) {
+        link.setAttribute("href", link.getAttribute("data-locked-href"));
+        link.removeAttribute("data-locked-href");
+      }
+    } else if (link.hasAttribute("href")) {
+      link.setAttribute("data-locked-href", link.getAttribute("href"));
+      link.removeAttribute("href");
+    }
+    link.classList.toggle("is-locked", !open);
   }
 
   /** How many lessons of one module are finished. */
@@ -252,6 +277,19 @@
     svg.setAttribute("focusable", "false");
     var path = document.createElementNS(SVG_NS, "path");
     path.setAttribute("d", "M2.2 8.9c1.3 1 2.5 2.3 3.6 3.9C7.9 8.6 10.4 5.3 14 2.4");
+    svg.appendChild(path);
+    return svg;
+  }
+
+  /** A small padlock, for a lesson that isn't open yet. */
+  function lock() {
+    var svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("class", "lock");
+    svg.setAttribute("viewBox", "0 0 16 16");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    var path = document.createElementNS(SVG_NS, "path");
+    path.setAttribute("d", "M5.2 7.2V5.1a2.8 2.8 0 0 1 5.6 0v2.1M3.7 7.2h8.6v6.4H3.7z");
     svg.appendChild(path);
     return svg;
   }
@@ -680,17 +718,24 @@
     document.querySelectorAll(".lesson-list li[data-lesson]").forEach(function (li) {
       var id = li.getAttribute("data-lesson");
       var isDone = done.has(id);
+      var open = !byId[id] || isOpen(byId[id], done);
       li.classList.toggle("is-done", isDone);
       li.classList.toggle("is-next", !!next && next.id === id);
+      li.classList.toggle("is-locked", !open);
+      var link = li.querySelector("a");
+      setLinkOpen(link, open);
       var state = li.querySelector(".lesson-state");
       if (!state) {
         state = el("span", { class: "lesson-state" });
-        li.querySelector("a").appendChild(state);
+        link.appendChild(state);
       }
       state.textContent = "";
       if (isDone) {
         state.appendChild(tick());
         state.appendChild(el("span", { class: "visually-hidden" }, ["(done)"]));
+      } else if (!open) {
+        state.appendChild(lock());
+        state.appendChild(el("span", { class: "visually-hidden" }, ["(locked)"]));
       }
     });
 
@@ -876,12 +921,16 @@
     var list = el("ol", { class: "rail-lessons" });
     current.module.lessons.forEach(function (l) {
       var lesson = byId[l[0]];
+      var open = l[0] === current.id || isOpen(lesson, done);
       var state = el("span", { class: "rail-state" });
       if (done.has(l[0])) {
         state.appendChild(tick());
         state.appendChild(el("span", { class: "visually-hidden" }, ["(done)"]));
+      } else if (!open) {
+        state.appendChild(lock());
+        state.appendChild(el("span", { class: "visually-hidden" }, ["(locked)"]));
       }
-      var link = el("a", { href: lessonUrl(lesson), "aria-current": l[0] === current.id ? "page" : null }, [
+      var link = el("a", { href: open ? lessonUrl(lesson) : null, class: open ? null : "is-locked", "aria-current": l[0] === current.id ? "page" : null }, [
         el("span", { class: "rail-id" }, [l[0]]),
         el("span", { class: "rail-text" }, [el("span", {}, [l[1]])]),
         state,
@@ -909,12 +958,13 @@
       if (m === mod) return;
       var first = byId[m.lessons[0][0]];
       var n = doneInModule(m, done);
+      var open = isOpen(first, done);
       others.appendChild(
         el("li", {}, [
-          el("a", { href: lessonUrl(first) }, [
+          el("a", { href: open ? lessonUrl(first) : null, class: open ? null : "is-locked" }, [
             el("span", { class: "rail-id" }, [String(m.n)]),
-            el("span", { class: "rail-text" }, [m.title]),
-            el("span", { class: "rail-state" }, [n + "/" + m.lessons.length]),
+            el("span", { class: "rail-text" }, [m.title, open ? null : el("span", { class: "visually-hidden" }, [" (locked)"])]),
+            el("span", { class: "rail-state" }, [open ? n + "/" + m.lessons.length : lock()]),
           ]),
         ])
       );
@@ -1013,19 +1063,67 @@
       }
       renderRail(current, done);
       renderOutline(current, done);
+      updateNextLink(current, done);
     });
 
     host.appendChild(notesBlock);
     host.appendChild(el("div", { class: "done-row" }, [label, status]));
   }
 
-  /** Set up a lesson page: rail, outline, notes and done checkbox. */
+  var doneToggleBuilt = false;
+
+  /** Show the lesson on screen, or keep it locked: a locked lesson shows its title and the way to where
+      the learner is up to, not its content, notes or done box. */
+  function applyLock(current, done) {
+    var open = isOpen(current, done);
+    document.body.classList.toggle("is-locked", !open);
+    var panel = document.querySelector(".lesson-locked");
+    if (open) {
+      if (panel) panel.parentNode.removeChild(panel);
+      if (!doneToggleBuilt) {
+        renderDoneToggle(current);
+        doneToggleBuilt = true;
+      }
+    } else {
+      var up = nextUp(done);
+      if (!panel) {
+        var header = document.querySelector(".lesson-header");
+        if (!header) return;
+        panel = el("section", { class: "lesson-locked", "aria-labelledby": "locked-title" });
+        header.parentNode.insertBefore(panel, header.nextSibling);
+      }
+      panel.textContent = "";
+      panel.appendChild(el("h2", { class: "locked-title", id: "locked-title" }, [lock(), el("span", {}, ["This lesson isn't open yet"])]));
+      panel.appendChild(
+        el("p", {}, ["Lessons open in order: each one opens when the one before it is marked as done. You're up to " + up.id + " " + up.title + "."])
+      );
+      panel.appendChild(el("p", { class: "locked-action" }, [el("a", { class: "button", href: lessonUrl(up) }, ["Go to " + up.id])]));
+    }
+    updateNextLink(current, done);
+  }
+
+  /** The lesson's Next link opens once this lesson is ticked (which is what opens the next one). */
+  function updateNextLink(current, done) {
+    var next = document.querySelector(".lesson-nav a.next");
+    if (!next) return;
+    var target = lessons[lessons.indexOf(current) + 1];
+    var open = !target || isOpen(target, done);
+    setLinkOpen(next, open);
+    var note = next.querySelector(".nav-locked");
+    if (open) {
+      if (note) note.parentNode.removeChild(note);
+    } else if (!note) {
+      next.appendChild(el("span", { class: "nav-locked" }, [lock(), el("span", {}, ["Opens when this lesson is marked as done"])]));
+    }
+  }
+
+  /** Set up a lesson page: rail, then the lesson (or its lock), then the outline. */
   function renderLesson() {
     var current = byId[document.body.getAttribute("data-lesson")];
     if (!current) return;
     var done = loadDone();
     renderRail(current, done);
-    renderDoneToggle(current);
+    applyLock(current, done);
     renderOutline(current, done);
   }
 
@@ -1050,6 +1148,7 @@
     if (!current) return;
     if (key === null || key === DONE_KEY) {
       var done = loadDone();
+      applyLock(current, done);
       var input = document.getElementById("lesson-done");
       var status = document.querySelector(".done-status");
       if (input) input.checked = done.has(current.id);
